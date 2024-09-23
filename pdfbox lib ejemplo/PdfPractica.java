@@ -15,21 +15,25 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
+import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
-
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.text.PDFTextStripper;
 public class PdfPractica {
 
     public static void main(String[] args) throws IOException {
         
         
         //si el archivo no existe, lo creamos
-        //PDDocument doc = new PDDocument();
+        PDDocument doc = new PDDocument();
         
         //si existe lo podemos cargar
+        /*
         File arch = new File("E:/Universidad/Programacion/documentos de prueba/doc.pdf");//llamamos el pdf que queremos cargar
         PDDocument doc = Loader.loadPDF(arch); //lo cargamos con la libreria LOADER --importante
-
+    */
         System.out.println("PDF cargado"); 
         
         PDPage pagina = new PDPage();
@@ -39,7 +43,12 @@ public class PdfPractica {
         //}
         
         //doc.removePage(2);//elimina la pagina 3
-        
+
+        AccessPermission acces = new AccessPermission();         //creamos el objeto de segurad, permiso de acceso. Esto nos servira para "encriptar" el documento
+        StandardProtectionPolicy contra = new StandardProtectionPolicy("1234", "1234", acces);//creamos una contraseña
+        contra.setEncryptionKeyLength(128);//tamaño de la contraseña que el usuario y tu pueden registrar TIene que ser; 40, 128 o 256
+        contra.setPermissions(acces); //este metodo acepta objetos del tipo: AccessPermission 
+        doc.protect(contra); //registramos la contraseña y sus configuraciones al doc
         
         
         //escribiendo TEXTO:
@@ -50,12 +59,21 @@ public class PdfPractica {
         //ahora, para poner informacion en la primera hoja. tenemos que empezar el "flujo de contenido"
         //con el objeto "Content Stream" incializamos todo para el cambio de la hoja..
         
+        
+            //PDImageXObject pdImage = PDImageXObject.createFromFile("C:/logo.png", doc);
+            PDImageXObject imagen = PDImageXObject.createFromFile("E:/Universidad/Programacion/imagen_test.png",doc);
+            //para poner imagenes nesesitamos un objeto de imagen, para esto usamos pdimage, requiere la dirreccion de donde sacar la imagen y el archivo donde lo guardaremos
+        
         PDPageContentStream flujo = new PDPageContentStream(doc,hoja);
         
-        flujo.beginText();
+        flujo.drawImage(imagen, 0, 680);//tener en cuenta que esto ignora las letras. Osea que se pone por debajo de estas..
+            //los datos dados, son las coordenadas donde va la imagen, la esquina inferior izquierda es 0,0.. x,y
+            //mas o menos el maximo de la hoja en altura es 680
             
+        flujo.beginText();                
+        
             flujo.newLineAtOffset(25, 700);//""cordenada"" donde empieza a escribir
-            
+            flujo.setLeading(14.5f); //espacio entre lineas..
             //contentStream.setFont( font_type, font_size );
             flujo.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 12);//fuente y tamaño de letras
             //bendito es stackOverflow -https://stackoverflow.com/questions/76985722/how-to-set-font-on-org-apache-pdfbox-while-migrating-from-3-0-0-rc1-to-3-0-0
@@ -63,7 +81,11 @@ public class PdfPractica {
             //ahora lo que queremos escribir..
             
             String texto = "Mi nombre es Patricio y soy un estudiante de momento";
+            String texto2 = "Palabras de segunda linea--  --";
             flujo.showText(texto);
+            flujo.newLine();//saltamos a la siguiente linea
+            flujo.showText(texto2);
+            
         flujo.endText();
         flujo.close();
         
@@ -78,6 +100,15 @@ public class PdfPractica {
         //cerramos archivo
         doc.close(); 
         
+        /*leer del archivo
+        File arch2 = new File("E:/Universidad/Programacion/documentos de prueba/doc.pdf");
+        PDDocument doc2 = Loader.loadPDF(arch2); //lo cargamos con la libreria LOADER --importante
+         PDFTextStripper pdfLector = new PDFTextStripper();
+         String texto3 = pdfLector.getText(doc2);
+         System.out.println(texto3);
+
+        doc2.close();
+        */
         return;
         /*
         //seccion de notacion de otras funciones y detalles..
@@ -144,3 +175,5 @@ public class PdfPractica {
 */
     }
 }
+
+//https://www.tutorialspoint.com/pdfbox/pdfbox_javascript_in_pdf_document.htm
