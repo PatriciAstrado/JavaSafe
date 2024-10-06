@@ -74,11 +74,11 @@ public class SMpregunta extends Pregunta {
     public void registrar(String respuesta, Boolean correcta) {
         File arch = new File("examen.txt");
 
-        // Write to the file using try-with-resources to ensure proper closure
-        try (FileWriter escritor = new FileWriter(arch, true)) {
+        
+        try (FileWriter escritor = new FileWriter(arch, true)) {// Write to the file using try-with-resources to ensure proper closure
             escritor.write("Pregunta: " + getText() + "\n");
-            escritor.write("Respuesta correcta: " + opciones[respuestaCorrecta] + "\n");
-            escritor.write("Respuesta introducida: " + opciones[(respuesta.charAt(0)-'a')] + "\n");
+            escritor.write("Respuesta correcta: " + opciones[respuestaCorrecta] + "\n");//escribimos la opcion correcta segun el array de opciones
+            escritor.write("Respuesta introducida: " + opciones[(respuesta.charAt(0)-'a')] + "\n");//escribimos la respuesta dada segun el array de opciones
             escritor.write("Puntaje: " + peso + "\n");
             if(correcta){
                 escritor.write(":: CORRECTA ::\n\n");

@@ -1,7 +1,12 @@
 package examen;
 
+import java.io.File;
+
 public class ExamenMain {
     public static void main(String[] args) {
+        File arch = new File("examen.txt");
+        arch.delete(); //aseguramos que el archivo este vacio via  borrandolo, si no solo escribe en las siguientes lineas
+        
         Exam examen = new Exam();
 
         // Agregar preguntas de Verdadero/Falso

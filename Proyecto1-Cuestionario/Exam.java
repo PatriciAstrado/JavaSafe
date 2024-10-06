@@ -1,5 +1,9 @@
 package examen;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Exam {
     private Pregunta[] preguntas;
     private int contador;
@@ -60,11 +64,31 @@ public class Exam {
                 throw new ArithmeticException("El puntaje total es cero, no se puede calcular el porcentaje.");
             }
             double porcentaje = (puntajeObtenido / puntajeTotal) * 100;
+            registrar(puntajeObtenido, puntajeTotal);
             System.out.printf("\nResultado: %.2f%% (%f/%f)\n", porcentaje, puntajeObtenido, puntajeTotal);
         } catch (ArithmeticException e) {
             System.out.println("Error al calcular el porcentaje: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Ocurrió un error inesperado al calcular el porcentaje: " + e.getMessage());
+        }
+    }
+    
+    
+    public void registrar(double puntajeObtenido, double puntajeTotal) {
+        File arch = new File("examen.txt");
+        double nota = (puntajeObtenido / puntajeTotal) * 100;
+        // Write to the file using try-with-resources to ensure proper closure
+        try (FileWriter escritor = new FileWriter(arch, true)) {
+                escritor.write(String.format("\nPuntaje Total: (%.2f/%.2f)\n", puntajeObtenido, puntajeTotal));
+                escritor.write(String.format("\n Nota: %.2f\n", nota));            
+                 if(nota >= 40){
+                     escritor.write("Felicidades pasaste");            
+                 }else{
+                    escritor.write("No pasaste");
+                 }
+        } catch (IOException e) {
+            System.out.println("Un error ocurrió al escribir en el archivo.");
+            
         }
     }
 }

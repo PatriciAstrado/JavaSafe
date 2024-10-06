@@ -57,8 +57,8 @@ public class RCpregunta extends Pregunta {
     public void registrar(String respuesta, Boolean correcta) {
         File arch = new File("examen.txt");
 
-        // Write to the file using try-with-resources to ensure proper closure
-        try (FileWriter escritor = new FileWriter(arch, true)) {
+        
+        try (FileWriter escritor = new FileWriter(arch, true)) {// Write to the file using try-with-resources to ensure proper closure
             escritor.write("Pregunta: " + getText() + "\n");
             escritor.write("Respuesta correcta: " + respuestaCorrecta.toUpperCase() + "\n");
             escritor.write("Respuesta introducida: " + respuesta.toUpperCase() + "\n");

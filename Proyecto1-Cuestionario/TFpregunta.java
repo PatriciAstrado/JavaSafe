@@ -58,10 +58,10 @@ public class TFpregunta extends Pregunta {
     
     @Override
     public void registrar(String respuesta, Boolean correcta) {
-        File arch = new File("examen.txt");
+        File arch = new File("examen.txt");//cargamos el archivo txt examen
 
-        // Write to the file using try-with-resources to ensure proper closure
-        try (FileWriter escritor = new FileWriter(arch, true)) {
+        
+        try (FileWriter escritor = new FileWriter(arch, true)) {//si al crear el escritor no hay problemas empieza a escaribir en el archivo hasta que termine o suelte error
             escritor.write("Pregunta: " + getText() + "\n");
             escritor.write("Respuesta correcta: " + Boolean.toString(respuestaCorrecta).toUpperCase() + "\n");
             escritor.write("Respuesta introducida: " + respuesta.toUpperCase() + "\n");
